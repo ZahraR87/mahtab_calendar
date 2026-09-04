@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تقویم اقامتگاه مهتاب</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">اکسیر صنعت</div>
+        <h1>تقویم اقامتگاه مهتاب</h1>
+      </div>
+      <div class="top-actions">
+        <button class="button secondary" id="todayBtn">امروز</button>
+        <button class="button secondary" id="printBtn">🖨 چاپ</button>
+        <button class="button secondary" id="syncBtn">ورود مدیر</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="calendar-card">
+        <div class="calendar-toolbar">
+          <div class="month-navigation">
+            <button class="icon-button" id="nextMonthBtn" aria-label="ماه بعد">‹</button>
+            <div class="month-title">
+              <h2 id="monthTitle">شهریور ۱۴۰۵</h2>
+            </div>
+            <button class="icon-button" id="prevMonthBtn" aria-label="ماه قبل">›</button>
+          </div>
+        </div>
+
+        <div class="calendar-wrap">
+          <div class="weekdays" id="weekdays"></div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Event / day editor -->
+  <div class="modal-backdrop hidden" id="eventModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <button class="modal-close" id="closeModalBtn" aria-label="بستن">×</button>
+      <div class="modal-header">
+        <div class="eyebrow">مدیریت روز</div>
+        <h3 id="modalTitle">افزودن رویداد</h3>
+        <p id="selectedDateLabel"></p>
+      </div>
+
+      <form id="eventForm">
+        <input type="hidden" id="eventId">
+
+        <div class="day-status-row">
+          <label class="switch-label">
+            <input type="checkbox" id="offDay">
+            <span class="switch"></span>
+            <span>این روز تعطیل / خارج از برنامه باشد</span>
+          </label>
+        </div>
+
+        <div id="eventFields">
+          <label>
+            عنوان
+            <input id="eventTitle" type="text" maxlength="80" required placeholder="" autocomplete="off">
+          </label>
+
+          <label>
+            شماره تلفن
+            <input id="eventPhone" type="tel" maxlength="30" placeholder="" autocomplete="tel" inputmode="tel">
+          </label>
+
+          <label>
+            توضیحات
+            <textarea id="eventDescription" maxlength="500" rows="4" placeholder="توضیحات اختیاری"></textarea>
+          </label>
+
+          <div class="form-row time-row">
+            <label>
+              شروع
+              <input id="eventStartTime" type="time">
+            </label>
+            <label>
+              پایان
+              <input id="eventEndTime" type="time">
+            </label>
+          </div>
+
+          <label>
+            رنگ
+            <div class="color-picker" id="colorPicker"></div>
+            <input type="hidden" id="eventColor" value="blue">
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="button danger hidden" id="deleteEventBtn">حذف رویداد</button>
+          <div class="form-actions-right">
+            <button type="button" class="button secondary" id="cancelBtn">لغو</button>
+            <button type="submit" class="button primary">ذخیره</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin login / sync -->
+  <div class="modal-backdrop hidden" id="syncModal">
+    <div class="modal sync-modal" role="dialog" aria-modal="true">
+      <button class="modal-close" id="closeSyncBtn" aria-label="بستن">×</button>
+      <div class="modal-header"><div class="eyebrow">مدیریت تقویم</div><h3 id="syncTitle">ورود مدیر</h3><p id="syncDescription">برای تغییر رویدادها، ابتدا از دکمه «ورود مدیر» وارد حساب مدیریت شوید.</p></div>
+      <div id="loginPanel">
+        <label>نام کاربری GitHub<input id="githubOwner" placeholder="zahrar87" autocomplete="username"></label>
+        <label>نام repository<input id="githubRepo" placeholder="exir_calendar"></label>
+        <label>Branch<input id="githubBranch" value="main"></label>
+        <label>GitHub Personal Access Token<input id="githubToken" type="password" placeholder="github_pat_..." autocomplete="off"></label>
+        <div class="info-box">این ورود فقط برای همین مرورگر و همین نشست نگهداری می‌شود. برای امنیت، از Fine-grained token با دسترسی فقط <strong>Contents: Read and write</strong> روی همین repository استفاده کنید.</div>
+        <div class="sync-status" id="syncStatus"></div>
+        <div class="form-actions"><div></div><div class="form-actions-right"><button type="button" class="button secondary" id="cancelSyncBtn">لغو</button><button type="button" class="button primary" id="saveGithubBtn">ورود و بارگذاری</button></div></div>
+      </div>
+      <div id="adminPanel" class="hidden">
+        <div class="admin-status-card"><div><strong>حالت مدیریت فعال است</strong><span id="adminRepoLabel"></span></div><span class="status-pill" id="saveStatusPill">همگام</span></div>
+        <div class="info-box">تغییرات شما ابتدا فقط در همین مرورگر ذخیره می‌شوند. وقتی کارتان تمام شد، «ذخیره در GitHub» را بزنید تا آخرین نسخه برای همه منتشر شود.</div>
+        <div class="manage-tools">
+          <div class="manage-tool-group">
+            <div class="manage-tool-title">GitHub</div>
+            <div class="manage-tool-buttons">
+              <button type="button" class="button primary" id="saveGithubManualBtn">ذخیره در GitHub</button>
+            </div>
+          </div>
+        </div>
+        <div class="sync-status" id="adminSyncStatus"></div>
+        <div class="form-actions"><button type="button" class="button danger" id="logoutBtn">خروج مدیر</button><div class="form-actions-right"><button type="button" class="button primary" id="closeAdminBtn">بستن</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
