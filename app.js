@@ -26,6 +26,7 @@ let current = todayJalali();
 let data = loadData();
 let selectedJalaliDate = null;
 let modalWasOffDay = false;
+let selectedAvailability = "";
 let toastTimer = null;
 
 const $ = id => document.getElementById(id);
@@ -62,6 +63,7 @@ init();
 
 function init() {
   buildColorPicker();
+  buildAvailabilityPicker();
   updateModeButton();
   render();
   loadPublicCalendar();
@@ -100,10 +102,11 @@ function loadData() {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
     return {
       events: Array.isArray(raw?.events) ? raw.events : [],
-      offDays: Array.isArray(raw?.offDays) ? raw.offDays : []
+      offDays: Array.isArray(raw?.offDays) ? raw.offDays : [],
+      availability: raw?.availability && typeof raw.availability === "object" ? raw.availability : {}
     };
   } catch {
-    return {events: [], offDays: []};
+    return {events: [], offDays: [], availability: {}};
   }
 }
 
@@ -145,10 +148,26 @@ function render() {
     if (isToday) cell.classList.add("today");
     if (isOff) cell.classList.add("off-day");
 
+    const dayHeader = document.createElement("div");
+    dayHeader.className = "day-header";
+
     const number = document.createElement("div");
     number.className = "day-number";
     number.textContent = toPersianDigits(day);
-    cell.appendChild(number);
+    dayHeader.appendChild(number);
+
+    const availability = document.createElement("div");
+    availability.className = "availability-indicator";
+    const availabilityState = data.availability?.[dateKey] || "";
+    if (availabilityState) {
+      availability.classList.add(availabilityState);
+      availability.title = availabilityState === "available" ? "قابل رزرو" : availabilityState === "unavailable" ? "رزرو نشده / قابل رزرو نیست" : "ظرفیت جزئی";
+    } else {
+      availability.classList.add("unset");
+      availability.title = "وضعیت رزرو تعیین نشده";
+    }
+    dayHeader.appendChild(availability);
+    cell.appendChild(dayHeader);
 
     const hint = document.createElement("div");
     hint.className = "add-hint";
@@ -214,6 +233,8 @@ function openDayModal(dateKey) {
   selectColor("blue");
 
   const off = data.offDays.includes(dateKey);
+  selectedAvailability = data.availability?.[dateKey] || "";
+  setAvailabilityChoice(selectedAvailability);
   modalWasOffDay = off;
   offDay.checked = off;
   toggleOffDayFields();
@@ -238,6 +259,8 @@ function openEditModal(ev) {
   selectColor(eventColor.value);
 
   modalWasOffDay = data.offDays.includes(ev.date);
+  selectedAvailability = data.availability?.[ev.date] || "";
+  setAvailabilityChoice(selectedAvailability);
   offDay.checked = modalWasOffDay;
   toggleOffDayFields();
 
@@ -247,6 +270,41 @@ function openEditModal(ev) {
 
   eventModal.classList.remove("hidden");
   setTimeout(() => eventTitle.focus(), 0);
+}
+
+function setAvailabilityChoice(state) {
+  selectedAvailability = state || "";
+  document.querySelectorAll(".availability-choice").forEach(button => {
+    button.classList.toggle("selected", button.dataset.state === selectedAvailability);
+  });
+}
+
+function buildAvailabilityPicker() {
+  const picker = $("availabilityPicker");
+  if (!picker) return;
+  picker.innerHTML = "";
+  [
+    ["available", "قابل رزرو"],
+    ["partial", "ظرفیت جزئی"],
+    ["unavailable", "پر / غیرقابل رزرو"]
+  ].forEach(([state, label]) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `availability-choice ${state}`;
+    button.dataset.state = state;
+    button.title = label;
+    button.setAttribute("aria-label", label);
+    button.addEventListener("click", () => setAvailabilityChoice(state));
+    picker.appendChild(button);
+  });
+  const clear = document.createElement("button");
+  clear.type = "button";
+  clear.className = "availability-choice unset clear-availability";
+  clear.dataset.state = "";
+  clear.title = "بدون وضعیت";
+  clear.setAttribute("aria-label", "بدون وضعیت");
+  clear.addEventListener("click", () => setAvailabilityChoice(""));
+  picker.appendChild(clear);
 }
 
 function toggleOffDayFields() {
@@ -259,6 +317,7 @@ function closeModal() {
   eventModal.classList.add("hidden");
   eventForm.reset();
   selectedJalaliDate = null;
+  selectedAvailability = "";
 }
 
 function saveEvent(e) {
@@ -269,6 +328,10 @@ function saveEvent(e) {
   const id = eventId.value;
   const existing = data.events.findIndex(ev => ev.id === id);
   const title = eventTitle.value.trim();
+
+  if (!data.availability || typeof data.availability !== "object") data.availability = {};
+  if (selectedAvailability) data.availability[dateKey] = selectedAvailability;
+  else delete data.availability[dateKey];
 
   // Marking a day as off never requires any other field.
   if (offDay.checked) {
@@ -292,6 +355,20 @@ function saveEvent(e) {
   }
 
   if (!title) {
+    if (!id && selectedAvailability) {
+      saveLocal();
+      closeModal();
+      render();
+      showToast("وضعیت رزرو ذخیره شد");
+      return;
+    }
+    if (id) {
+      saveLocal();
+      closeModal();
+      render();
+      showToast("وضعیت رزرو ذخیره شد");
+      return;
+    }
     showToast("لطفاً عنوان رویداد را وارد کنید");
     eventTitle.focus();
     return;
@@ -611,7 +688,8 @@ function decodeBase64Unicode(base64) {
 function normalizeData(value) {
   return {
     events: Array.isArray(value?.events) ? value.events : [],
-    offDays: Array.isArray(value?.offDays) ? value.offDays : []
+    offDays: Array.isArray(value?.offDays) ? value.offDays : [],
+    availability: value?.availability && typeof value.availability === "object" ? value.availability : {}
   };
 }
 
