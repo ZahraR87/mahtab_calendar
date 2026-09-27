@@ -199,6 +199,16 @@
       "startTime": "",
       "endTime": "",
       "color": "purple"
+    },
+    {
+      "id": "fcaf5046-b3a1-424b-9839-844009fe76da",
+      "date": "1405-07-09",
+      "title": "سلطانی",
+      "phone": "",
+      "description": "",
+      "startTime": "",
+      "endTime": "",
+      "color": "orange"
     }
   ],
   "offDays": [],
@@ -218,7 +228,7 @@
     "1405-07-12": "partial",
     "1405-07-13": "partial",
     "1405-07-14": "partial",
-    "1405-07-09": "available",
+    "1405-07-09": "partial",
     "1405-07-05": "available",
     "1405-07-15": "available",
     "1405-07-16": "available",
