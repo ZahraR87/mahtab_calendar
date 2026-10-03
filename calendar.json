@@ -289,6 +289,26 @@
       "startTime": "",
       "endTime": "",
       "color": "yellow"
+    },
+    {
+      "id": "7d1033ab-3ed1-4842-815f-5102af7c7bcb",
+      "date": "1405-07-19",
+      "title": "نصب و تعمیرات",
+      "phone": "",
+      "description": "",
+      "startTime": "",
+      "endTime": "",
+      "color": "red"
+    },
+    {
+      "id": "673d4a0c-91bf-46ac-a832-99b374e2364b",
+      "date": "1405-07-20",
+      "title": "نصب و تعمیرات",
+      "phone": "",
+      "description": "",
+      "startTime": "",
+      "endTime": "",
+      "color": "red"
     }
   ],
   "offDays": [],
@@ -313,6 +333,8 @@
     "1405-07-15": "partial",
     "1405-07-16": "partial",
     "1405-07-17": "partial",
-    "1405-07-18": "partial"
+    "1405-07-18": "partial",
+    "1405-07-19": "unavailable",
+    "1405-07-20": "unavailable"
   }
 }
