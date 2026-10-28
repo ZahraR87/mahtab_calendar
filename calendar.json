@@ -371,48 +371,8 @@
       "color": "teal"
     },
     {
-      "id": "57dc0e12-c8dd-42af-a294-665a478a7153",
+      "id": "3791baf4-0507-4d51-b961-4bb2e88a85e0",
       "date": "1405-08-11",
-      "title": "مهندس ملکی",
-      "phone": "",
-      "description": "",
-      "startTime": "",
-      "endTime": "",
-      "color": "blue"
-    },
-    {
-      "id": "53855281-e9e8-4509-ba33-acb275a17ff3",
-      "date": "1405-08-12",
-      "title": "مهندس ملکی",
-      "phone": "",
-      "description": "",
-      "startTime": "",
-      "endTime": "",
-      "color": "blue"
-    },
-    {
-      "id": "5d60734b-989a-4c0a-acbf-7ee6d2320594",
-      "date": "1405-08-13",
-      "title": "مهندس ملکی",
-      "phone": "",
-      "description": "",
-      "startTime": "",
-      "endTime": "",
-      "color": "blue"
-    },
-    {
-      "id": "e4290eb4-5346-4c1f-8c2b-be1e4622e731",
-      "date": "1405-08-14",
-      "title": "مهندس ملکی",
-      "phone": "",
-      "description": "",
-      "startTime": "",
-      "endTime": "",
-      "color": "blue"
-    },
-    {
-      "id": "b9c97ffc-c8a4-4d64-9821-962c44b93696",
-      "date": "1405-08-15",
       "title": "مهندس ملکی",
       "phone": "",
       "description": "",
@@ -450,10 +410,6 @@
     "1405-07-22": "partial",
     "1405-07-23": "partial",
     "1405-07-24": "partial",
-    "1405-08-11": "partial",
-    "1405-08-12": "partial",
-    "1405-08-13": "partial",
-    "1405-08-14": "partial",
-    "1405-08-15": "partial"
+    "1405-08-11": "partial"
   }
 }
