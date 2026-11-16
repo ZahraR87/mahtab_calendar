@@ -381,19 +381,9 @@
       "color": "blue"
     },
     {
-      "id": "9179d19b-d419-4310-ab8a-71aacb64d697",
-      "date": "1405-08-25",
-      "title": "ا کشامی",
-      "phone": "",
-      "description": "",
-      "startTime": "",
-      "endTime": "",
-      "color": "yellow"
-    },
-    {
       "id": "6b344f00-a0eb-47a5-9456-e8bdc8f1c66f",
       "date": "1405-08-26",
-      "title": "ا کشامی",
+      "title": "ا ملکی",
       "phone": "",
       "description": "",
       "startTime": "",
@@ -403,7 +393,7 @@
     {
       "id": "569dd135-0716-42c3-806e-9df5096f1bec",
       "date": "1405-08-27",
-      "title": "ا کشامی",
+      "title": "ا ملکی",
       "phone": "",
       "description": "",
       "startTime": "",
@@ -413,7 +403,7 @@
     {
       "id": "7ca800e5-c228-4799-9ec3-81d86e7217f1",
       "date": "1405-08-28",
-      "title": "آ کشامی",
+      "title": "آ ملکی",
       "phone": "",
       "description": "",
       "startTime": "",
@@ -514,7 +504,6 @@
     "1405-08-12": "partial",
     "1405-08-13": "partial",
     "1405-08-14": "partial",
-    "1405-08-25": "partial",
     "1405-08-26": "partial",
     "1405-08-27": "partial",
     "1405-08-28": "partial",
